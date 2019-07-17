@@ -20,41 +20,57 @@ Answer the following data queries. Keep track of the SQL you write by pasting it
 
 ### find all customers that live in London. Returns 6 records.
 > This can be done with SELECT and WHERE clauses
-
+        SELECT  * FROM Customers Where City="London";
 ### find all customers with postal code 1010. Returns 3 customers.
 > This can be done with SELECT and WHERE clauses
+        SELECT  * FROM Customers Where PostalCode =1010; 
 
 ### find the phone number for the supplier with the id 11. Should be (010) 9984510.
 > This can be done with SELECT and WHERE clauses
+        SELECT * FROM Suppliers where SupplierID=11;
 
 ### list orders descending by the order date. The order with date 1997-02-12 should be at the top.
 > This can be done with SELECT, WHERE, and ORDER BY clauses
+        SELECT * FROM Orders order by OrderDate Desc
 
 ### find all suppliers who have names longer than 20 characters. You can use `length(SupplierName)` to get the length of the name. Returns 11 records.
 > This can be done with SELECT and WHERE clauses
+        SELECT * FROM Suppliers Where length(SupplierName) >20;
 
 ### find all customers that include the word "market" in the name. Should return 4 records.
 > This can be done with SELECT and a WHERE clause using the LIKE keyword
 
 > Don't forget the wildcard '%' symbols at the beginning and end of your substring to denote it can appear anywhere in the string in question
+        SELECT * FROM Customers where CustomerName Like "%market%"
 
 ### add a customer record for _"The Shire"_, the contact name is _"Bilbo Baggins"_ the address is _"1 Hobbit-Hole"_ in _"Bag End"_, postal code _"111"_ and the country is _"Middle Earth"_.
 > This can be done with the INSERT INTO clause
-
+    INSERT INTO Customers (CustomerName, ContactName, Address, City, PostalCode, Country) values (" The Shire", "Bilno Baggins", "1 Hobbit Hole","Bag End", 111, "Middle Earth");
 ### update _Bilbo Baggins_ record so that the postal code changes to _"11122"_.
 > This can be done with UPDATE and WHERE clauses
+    UPDATE Customers SET PostalCode = 11122 WHERE CustomerName="Bilbo Baggins";
 
 ### list orders grouped by customer showing the number of orders per customer. _Rattlesnake Canyon Grocery_ should have 7 orders.
 > This can be done with SELECT, COUNT, JOIN and GROUP BY clauses. Your count should focus on a field in the Orders table, not the Customer table
+SELECT CustomerName, Count(Orders.CustomerID) from Orders 
+Join Customers on Orders.CustomerID= Customers.CustomerID
+group by Customers.CustomerName
 
 > There is more information about the COUNT clause on [W3 Schools](https://www.w3schools.com/sql/sql_count_avg_sum.asp)
 
 ### list customers names and the number of orders per customer. Sort the list by number of orders in descending order. _Ernst Handel_ should be at the top with 10 orders followed by _QUICK-Stop_, _Rattlesnake Canyon Grocery_ and _Wartian Herkku_ with 7 orders each.
 > This can be done by adding an ORDER BY clause to the previous answer
+SELECT CustomerName, Count(Orders.CustomerID) as orders from Orders 
+Join Customers on Orders.CustomerID= Customers.CustomerID
+group by Customers.CustomerName
+order by orders desc
 
 ### list orders grouped by customer's city showing number of orders per city. Returns 58 Records with _Aachen_ showing 2 orders and _Albuquerque_ showing 7 orders.
 > This is very similar to the previous two queries, however, it focuses on the City rather than the CustomerName
-
+SELECT City, Count(Customers.City) as cityorders from Orders 
+Join Customers on Orders.CustomerID= Customers.CustomerID
+group by Customers.City
+order by cityorders 
 
 ## Data Normalization
 
@@ -69,6 +85,51 @@ Take the following data and normalize it into a 3NF database.
 | Sam         | Ginger   | Dog      | Miss Kitty | Cat        | Bubble     | Fish       | Yes         | No           |
 
 ---
+
+Person Tabele
+|       ID    | Name     | DwellId  | FenceID  | 
+|-------------|----------|----------|----------|
+|       1     | Jane     |    2     |    2     |
+|       2     | Bob      |    1     |    2     |
+|       3     | Sam      |    1     |    1     |
+
+
+
+Dwell Type 
+|       ID    | Type     | 
+|-------------|----------|
+|       1     | non City |
+|       2     |   City   |   
+
+
+Fence Type 
+|       ID    | Type     | 
+|-------------|----------|
+|       1     |  Fenced  |
+|       2     |not fenced|
+
+PetType Table
+|       ID    | Name     | 
+|-------------|----------|
+|       1     |   Dog    |
+|       2     |   Cat    |    
+|       3     |   Horse  | 
+|       4     |   Turtle | 
+|       5     |   Fish   | 
+
+
+Pet Table 
+
+| Pet Id      | Pet Name |  OwnerID | PetTypeID |
+|-------------|----------|----------| ----------|
+|     1       | Ellie    |     1    |     1     |
+|     2       | Joe      |     2    |     3     |
+|     3       | Ginger   |     3    |     1     |
+|     4       | Tiger    |     1    |     2     |
+|     5       | Tobby    |     1    |     4     |
+|     6       | Bubble   |     1    |     5     |
+
+
 ## Stretch Goals
 
 ### delete all customers that have no orders. Should delete 17 (or 18 if you haven't deleted the record added) records.
